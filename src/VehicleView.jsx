@@ -8,11 +8,11 @@ export default function VehicleView() {
   const [vehicles, setVehicles] = useState([]);
   const [vehicle, setVehicle] = useState(null);
   
-  // Get today's date in YYYY-MM-DD format for the HTML date input default
+  // YYYY-MM-DD format for standardization
   const today = new Date().toISOString().split('T')[0];
   
   const [recordType, setRecordType] = useState('maintenance');
-  const [recordDate, setRecordDate] = useState(today); // New state for date
+  const [recordDate, setRecordDate] = useState(today);
   const [recordText, setRecordText] = useState('');
   const [recordMileage, setRecordMileage] = useState(''); 
 
@@ -33,7 +33,7 @@ export default function VehicleView() {
 
     const newRecord = {
       id: Date.now().toString(),
-      date: recordDate, // Save the user-selected date
+      date: recordDate, // Allows the user to record their own date if it wasn't today
       description: recordText,
       mileage: recordMileage 
     };
@@ -47,7 +47,7 @@ export default function VehicleView() {
     setVehicle(updatedVehicle);
     localStorage.setItem('garage-vehicles', JSON.stringify(updatedVehicles));
     
-    // Clear inputs and reset date to today
+    // Clears inputs (since they're useState variables) and resets date to current date
     setRecordText('');
     setRecordMileage(''); 
     setRecordDate(today);
@@ -90,7 +90,6 @@ export default function VehicleView() {
                   </Form.Select>
                 </Form.Group>
                 
-                {/* New Date Input Field */}
                 <Form.Group className="mb-3">
                   <Form.Label>Date</Form.Label>
                   <Form.Control 

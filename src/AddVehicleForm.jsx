@@ -10,10 +10,10 @@ export default function AddVehicleForm({ onAdd }) {
     e.preventDefault(); 
     if (!make || !model || !year) return;
 
-    // Generate a simple unique ID using the current timestamp
+    // Get current date info to use as an ID
     const newId = Date.now().toString();
 
-    // Pass the new vehicle object with the ID and empty arrays
+    // Pass new vehicle object for storage, values represent user inputs.
     onAdd({ 
       id: newId, 
       make, 

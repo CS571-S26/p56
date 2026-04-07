@@ -45,7 +45,6 @@ export default function Vehicles() {
                       <Card.Text className="text-muted">
                         Manage maintenance and modifications for this vehicle.
                       </Card.Text>
-                      {/* Updated routing to dynamic ID */}
                       <Button 
                         as={Link} 
                         to={`/vehicles/${vehicle.id}`} 

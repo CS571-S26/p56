@@ -5,7 +5,6 @@ export default function Navigation() {
   return (
     <Navbar expand="lg" className="navbar-custom shadow-sm sticky-top">
       <Container>
-        {/* Replace href with 'as={Link}' and 'to' */}
         <Navbar.Brand as={Link} to="/" className="text-custom-accent fw-bold fs-4">
           Garage Tracker
         </Navbar.Brand>

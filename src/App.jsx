@@ -12,7 +12,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/vehicles" element={<Vehicles />} />
-        {/* The :id parameter captures the unique vehicle ID from the URL */}
+        {/* The id parameter allows us to go to a specific vehicle by ID(based on date/time) */}
         <Route path="/vehicles/:id" element={<VehicleView />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
