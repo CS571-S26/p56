@@ -1,56 +1,57 @@
 /* App.css */
 :root {
-  /* Your Custom Palette */
+  /* Declare variables for the color palette to make it a bit easier to manage/change if wanted */
+  /* This color palette largely came from coolors.co, I just modified it to be a bit more neutral and what I wanted. */
   --rs-steel-azure: #054A91;
   --rs-steel-blue: #3E7CB1;
   --rs-wisteria-blue: #81A4CD;
   --rs-alice-blue: #DBE4EE;
   
-  /* Neutrals for Contrast and Backgrounds */
+  /* Neutral colors to balance out the page */
   --rs-dark-gray: #333333;
   --rs-light-gray: #F8F9FA;
   --rs-white: #FFFFFF;
 }
 
-/* Background Utility */
+/* Background styling for main pages */
 .bg-app-light {
-  background-color: var(--rs-alice-blue); /* Very subtle blue/gray background */
+  background-color: var(--rs-alice-blue); 
 }
 
-/* Primary Button using Steel Azure */
+/* Primary button coloring, consistent across pages */
 .btn-custom-primary {
   background-color: var(--rs-steel-azure);
   color: var(--rs-white);
   border: none;
   transition: all 0.2s ease-in-out;
 }
-
+/* Button hover coloring to create some contrast */
 .btn-custom-primary:hover {
   background-color: var(--rs-steel-blue);
   color: var(--rs-white);
   transform: translateY(-2px);
 }
 
-/* Outline Button for Secondary Actions */
+/* Button for 'less important' and secondary actions */
 .btn-custom-outline {
   border: 2px solid var(--rs-steel-blue);
   color: var(--rs-steel-azure);
   background-color: transparent;
   transition: all 0.2s ease-in-out;
 }
-
+/* Button hover for secondary actions */
 .btn-custom-outline:hover {
   background-color: var(--rs-steel-blue);
   color: var(--rs-white);
 }
 
-/* Navbar Customizations */
+/* Navbar made to match website */
 .navbar-custom {
   background-color: var(--rs-white);
   border-bottom: 4px solid var(--rs-steel-azure);
 }
 
-/* Text Accents */
+/* Used to accent specific text with blue */
 .text-custom-accent {
   color: var(--rs-steel-azure) !important;
 }

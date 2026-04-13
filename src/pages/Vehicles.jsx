@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import AddVehicleForm from './AddVehicleForm';
+import AddVehicleForm from '../components/AddVehicleForm';
 
 export default function Vehicles() {
   const [vehicles, setVehicles] = useState(() => {
