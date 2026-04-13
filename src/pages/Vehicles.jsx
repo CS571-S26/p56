@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Container, Row, Col } from 'react-bootstrap';
 import AddVehicleForm from '../components/AddVehicleForm';
+import VehicleCard from '../components/VehicleCard'; // 1. Import the new component
 
 export default function Vehicles() {
   const [vehicles, setVehicles] = useState(() => {
@@ -35,26 +35,9 @@ export default function Vehicles() {
             <p className="text-muted">No vehicles added yet. Use the form to add one.</p>
           ) : (
             <Row className="g-3">
-              {vehicles.map((vehicle, index) => (
-                <Col sm={6} key={index}>
-                  <Card className="shadow-sm border-0 h-100">
-                    <Card.Body>
-                      <Card.Title style={{ color: 'var(--rs-dark-gray)' }}>
-                        {vehicle.year} {vehicle.make} {vehicle.model}
-                      </Card.Title>
-                      <Card.Text className="text-muted">
-                        Manage maintenance and modifications for this vehicle.
-                      </Card.Text>
-                      <Button 
-                        as={Link} 
-                        to={`/vehicles/${vehicle.id}`} 
-                        className="btn-custom-outline rounded-pill px-3 py-1 mt-2"
-                      >
-                        View Details
-                      </Button>
-                    </Card.Body>
-                  </Card>
-                </Col>
+              {/* 2. Meaningfully use the component by passing the vehicle as a prop */}
+              {vehicles.map((vehicle) => (
+                <VehicleCard key={vehicle.id} vehicle={vehicle} />
               ))}
             </Row>
           )}
