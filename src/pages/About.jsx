@@ -7,16 +7,18 @@ export default function About() {
         <Col md={8}>
           <Card className="shadow-sm border-0 rounded-4">
             <Card.Body className="p-5">
-              <h2 className="fw-bold mb-4" style={{ color: 'var(--rs-dark-gray)' }}>
+              {/* ACCESSIBILITY FIX: Changed h2 to h1 for the top-level page heading */}
+              <h1 className="fw-bold mb-4 fs-2" style={{ color: 'var(--rs-dark-gray)' }}>
                 About Garage Tracker
-              </h2>
+              </h1>
               <p className="fs-5 text-muted mb-4">
                 Garage Tracker was built by Drew Voss, a student at UW-Madison, with the assistance of Gemini AI, for full transparency, primarily to act as a tracking system for vehicle maintenance and modifications. It utilizes local storage for vehicle tracking and allows you to manage a garage of multiple vehicles, so you can document and keep track of any vehicles you own.
               </p>
               
-              <h4 className="fw-semibold mt-4 mb-3" style={{ color: 'var(--rs-steel-blue)' }}>
+              {/* ACCESSIBILITY FIX: Changed h4 to h2 to prevent skipping from h1 to h4 */}
+              <h2 className="fw-semibold mt-4 mb-3 fs-4" style={{ color: 'var(--rs-steel-blue)' }}>
                 Core Features
-              </h4>
+              </h2>
               <ul className="list-group list-group-flush mb-4">
                 <li className="list-group-item bg-transparent px-0 text-muted border-bottom-0 pb-2">
                   <strong>Multiple Vehicles:</strong> Store information for all of your vehicles.

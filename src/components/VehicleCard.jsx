@@ -6,7 +6,8 @@ export default function VehicleCard({ vehicle }) {
     <Col sm={6}>
       <Card className="shadow-sm border-0 h-100">
         <Card.Body>
-          <Card.Title style={{ color: 'var(--rs-dark-gray)' }}>
+          {/* ACCESSIBILITY FIX: Added as="h2" to prevent skipping heading levels, added fs-5 to preserve size */}
+          <Card.Title as="h2" className="fs-5" style={{ color: 'var(--rs-dark-gray)' }}>
             {vehicle.year} {vehicle.make} {vehicle.model}
           </Card.Title>
           <Card.Text className="text-muted">

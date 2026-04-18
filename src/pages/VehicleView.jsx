@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button, Form } from 'react-bootstrap';
-import CostBadge from '../components/CostBadge'; // 1. Import Badge
-import RecordItem from '../components/RecordItem'; // 2. Import Record Item
+import RecordListCard from '../components/RecordListCard'; 
 
 export default function VehicleView() {
   const { id } = useParams();
@@ -20,6 +19,13 @@ export default function VehicleView() {
   const [recordCost, setRecordCost] = useState('');
   const [recordReceipt, setRecordReceipt] = useState('');
 
+  // New State for edge cases
+  const [isDateUnknown, setIsDateUnknown] = useState(false);
+  const [isMileageUnknown, setIsMileageUnknown] = useState(false);
+  const [isCostUnknown, setIsCostUnknown] = useState(false);
+  const [recordOwner, setRecordOwner] = useState('Me');
+  const [recordOwnerOther, setRecordOwnerOther] = useState('');
+
   useEffect(() => {
     const saved = localStorage.getItem('garage-vehicles');
     if (saved) {
@@ -33,15 +39,21 @@ export default function VehicleView() {
 
   const handleAddRecord = (e) => {
     e.preventDefault();
-    if (!recordText || !recordDate) return;
+    if (!recordText || (!isDateUnknown && !recordDate)) return;
+
+    const finalDate = isDateUnknown ? "Unknown" : recordDate;
+    const finalMileage = isMileageUnknown ? "Unknown" : recordMileage;
+    const finalCost = isCostUnknown ? "Unknown" : (parseFloat(recordCost) || 0);
+    const finalOwner = recordOwner === 'Other' ? recordOwnerOther || "Other" : recordOwner;
 
     const newRecord = {
       id: Date.now().toString(),
-      date: recordDate, 
+      date: finalDate, 
       description: recordText,
-      mileage: recordMileage,
-      cost: parseFloat(recordCost) || 0, 
-      receiptSummary: recordReceipt
+      mileage: finalMileage,
+      cost: finalCost, 
+      receiptSummary: recordReceipt,
+      owner: finalOwner
     };
 
     const updatedVehicle = { ...vehicle };
@@ -53,11 +65,17 @@ export default function VehicleView() {
     setVehicle(updatedVehicle);
     localStorage.setItem('garage-vehicles', JSON.stringify(updatedVehicles));
     
+    // Reset all form state
     setRecordText('');
     setRecordMileage(''); 
     setRecordDate(today);
     setRecordCost('');
     setRecordReceipt('');
+    setIsDateUnknown(false);
+    setIsMileageUnknown(false);
+    setIsCostUnknown(false);
+    setRecordOwner('Me');
+    setRecordOwnerOther('');
   };
 
   const handleDeleteVehicle = () => {
@@ -85,7 +103,8 @@ export default function VehicleView() {
   if (!vehicle) {
     return (
       <Container className="py-5 text-center">
-        <h3>Vehicle not found.</h3>
+        {/* ACCESSIBILITY FIX: H1 for page hierarchy */}
+        <h1>Vehicle not found.</h1>
         <Button as={Link} to="/vehicles" className="btn-custom-primary mt-3">Back to Garage</Button>
       </Container>
     );
@@ -94,9 +113,10 @@ export default function VehicleView() {
   return (
     <Container className="py-5">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="fw-bold mb-0" style={{ color: 'var(--rs-dark-gray)' }}>
+        {/* ACCESSIBILITY FIX: Changed to H1 so the page has a proper top-level heading */}
+        <h1 className="fw-bold mb-0 fs-2" style={{ color: 'var(--rs-dark-gray)' }}>
           {vehicle.year} {vehicle.make} {vehicle.model}
-        </h2>
+        </h1>
         <div>
           <Button variant="danger" className="me-2" onClick={handleDeleteVehicle}>
             Delete Vehicle
@@ -111,38 +131,110 @@ export default function VehicleView() {
         <Col md={4}>
           <Card className="shadow-sm border-0">
             <Card.Body>
-              <Card.Title>Add Record</Card.Title>
+              <Card.Title as="h2" className="fs-5">Add Record</Card.Title>
               <Form onSubmit={handleAddRecord}>
-                {/* Form inputs remain exactly the same */}
-                <Form.Group className="mb-3">
+                
+                {/* ACCESSIBILITY FIXES: controlId added to all Form.Groups */}
+                <Form.Group className="mb-3" controlId="recordTypeSelect">
                   <Form.Label>Record Type</Form.Label>
                   <Form.Select value={recordType} onChange={(e) => setRecordType(e.target.value)}>
                     <option value="maintenance">Maintenance</option>
                     <option value="modifications">Modification</option>
                   </Form.Select>
                 </Form.Group>
-                
-                <Form.Group className="mb-3">
-                  <Form.Label>Date</Form.Label>
-                  <Form.Control type="date" value={recordDate} onChange={(e) => setRecordDate(e.target.value)} required />
+
+                <Form.Group className="mb-3" controlId="recordOwnerSelect">
+                  <Form.Label>Done By (Owner)</Form.Label>
+                  <Form.Select value={recordOwner} onChange={(e) => setRecordOwner(e.target.value)}>
+                    <option value="Me">Me</option>
+                    <option value="Previous Owner">Previous Owner</option>
+                    <option value="Other">Other...</option>
+                  </Form.Select>
                 </Form.Group>
 
-                <Form.Group className="mb-3">
+                {recordOwner === 'Other' && (
+                  <Form.Group className="mb-3" controlId="recordOwnerOtherInput">
+                    <Form.Label>Specify Other Owner</Form.Label>
+                    <Form.Control 
+                      type="text" 
+                      placeholder="e.g., Dealership, Shop Name" 
+                      value={recordOwnerOther} 
+                      onChange={(e) => setRecordOwnerOther(e.target.value)} 
+                      required 
+                    />
+                  </Form.Group>
+                )}
+                
+                <Form.Group className="mb-3" controlId="recordDateGroup">
+                  <Form.Label>Date</Form.Label>
+                  <div className="d-flex align-items-center gap-2 mb-2">
+                    <Form.Control 
+                      type="date" 
+                      value={recordDate} 
+                      onChange={(e) => setRecordDate(e.target.value)} 
+                      disabled={isDateUnknown}
+                      required={!isDateUnknown} 
+                    />
+                    <Form.Check 
+                      type="checkbox" 
+                      id="unknownDateCheck" 
+                      label="Unknown" 
+                      checked={isDateUnknown}
+                      onChange={(e) => setIsDateUnknown(e.target.checked)}
+                      className="text-nowrap"
+                    />
+                  </div>
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="recordDescInput">
                   <Form.Label>Description</Form.Label>
                   <Form.Control type="text" placeholder="e.g., Oil Change" value={recordText} onChange={(e) => setRecordText(e.target.value)} required />
                 </Form.Group>
 
-                <Form.Group className="mb-3">
+                <Form.Group className="mb-3" controlId="recordMileageGroup">
                   <Form.Label>Mileage</Form.Label>
-                  <Form.Control type="number" placeholder="e.g., 50000" value={recordMileage} onChange={(e) => setRecordMileage(e.target.value)} />
+                   <div className="d-flex align-items-center gap-2 mb-2">
+                    <Form.Control 
+                      type="number" 
+                      placeholder="e.g., 50000" 
+                      value={recordMileage} 
+                      onChange={(e) => setRecordMileage(e.target.value)} 
+                      disabled={isMileageUnknown}
+                    />
+                    <Form.Check 
+                      type="checkbox" 
+                      id="unknownMileageCheck" 
+                      label="Unknown" 
+                      checked={isMileageUnknown}
+                      onChange={(e) => setIsMileageUnknown(e.target.checked)}
+                      className="text-nowrap"
+                    />
+                  </div>
                 </Form.Group>
 
-                <Form.Group className="mb-3">
+                <Form.Group className="mb-3" controlId="recordCostGroup">
                   <Form.Label>Cost ($)</Form.Label>
-                  <Form.Control type="number" step="0.01" placeholder="e.g., 59.99" value={recordCost} onChange={(e) => setRecordCost(e.target.value)} />
+                  <div className="d-flex align-items-center gap-2 mb-2">
+                    <Form.Control 
+                      type="number" 
+                      step="0.01" 
+                      placeholder="e.g., 59.99" 
+                      value={recordCost} 
+                      onChange={(e) => setRecordCost(e.target.value)} 
+                      disabled={isCostUnknown}
+                    />
+                    <Form.Check 
+                      type="checkbox" 
+                      id="unknownCostCheck" 
+                      label="Unknown" 
+                      checked={isCostUnknown}
+                      onChange={(e) => setIsCostUnknown(e.target.checked)}
+                      className="text-nowrap"
+                    />
+                  </div>
                 </Form.Group>
 
-                <Form.Group className="mb-3">
+                <Form.Group className="mb-3" controlId="recordNotesInput">
                   <Form.Label>Receipt Summary / Notes</Form.Label>
                   <Form.Control as="textarea" rows={2} placeholder="e.g., Bought synthetic oil and filter from AutoZone." value={recordReceipt} onChange={(e) => setRecordReceipt(e.target.value)} />
                 </Form.Group>
@@ -156,59 +248,19 @@ export default function VehicleView() {
         </Col>
 
         <Col md={8}>
-          {/* Maintenance Card */}
-          <Card className="shadow-sm border-0 mb-4">
-            <Card.Body>
-              <div className="d-flex justify-content-between border-bottom pb-2 mb-3">
-                <Card.Title className="mb-0">Maintenance Logs</Card.Title>
-                {/* 3. Meaningfully use the CostBadge */}
-                <CostBadge records={vehicle.maintenance} />
-              </div>
-              
-              {vehicle.maintenance.length === 0 ? (
-                <p className="text-muted">No maintenance recorded.</p>
-              ) : (
-                <ul className="list-group list-group-flush">
-                  {/* 4. Meaningfully use the RecordItem */}
-                  {vehicle.maintenance.map(rec => (
-                    <RecordItem 
-                      key={rec.id} 
-                      record={rec} 
-                      type="maintenance" 
-                      onDelete={handleDeleteRecord} 
-                    />
-                  ))}
-                </ul>
-              )}
-            </Card.Body>
-          </Card>
+          <RecordListCard 
+            title="Maintenance Logs" 
+            records={vehicle.maintenance} 
+            type="maintenance" 
+            onDelete={handleDeleteRecord} 
+          />
 
-          {/* Modifications Card */}
-          <Card className="shadow-sm border-0">
-            <Card.Body>
-              <div className="d-flex justify-content-between border-bottom pb-2 mb-3">
-                <Card.Title className="mb-0">Modification Logs</Card.Title>
-                {/* 3. Meaningfully use the CostBadge */}
-                <CostBadge records={vehicle.modifications} />
-              </div>
-
-              {vehicle.modifications.length === 0 ? (
-                <p className="text-muted">No modifications recorded.</p>
-              ) : (
-                <ul className="list-group list-group-flush">
-                   {/* 4. Meaningfully use the RecordItem */}
-                  {vehicle.modifications.map(rec => (
-                    <RecordItem 
-                      key={rec.id} 
-                      record={rec} 
-                      type="modifications" 
-                      onDelete={handleDeleteRecord} 
-                    />
-                  ))}
-                </ul>
-              )}
-            </Card.Body>
-          </Card>
+          <RecordListCard 
+            title="Modification Logs" 
+            records={vehicle.modifications} 
+            type="modifications" 
+            onDelete={handleDeleteRecord} 
+          />
         </Col>
       </Row>
     </Container>
