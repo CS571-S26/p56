@@ -1,7 +1,6 @@
 import { Badge } from 'react-bootstrap';
 
 export default function CostBadge({ records }) {
-  // We moved the calculation logic inside the component that actually uses it!
   const calculateTotalCost = (recordsArray) => {
     if (!recordsArray) return "0.00";
     const total = recordsArray.reduce((sum, record) => {
