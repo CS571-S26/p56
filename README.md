@@ -1,8 +1,8 @@
-# Garage Tracker 🚗🛠️
+# Garage Tracker 
 
-> **Live Demo:** [Insert your GitHub Pages link here]
+> **Live Demo:** https://cs571-s26.github.io/p56/
 
-## 📖 About The Project
+## About The Project
 
 This website is a garage tracker which allows you to keep track of maintenance and modifications for any number of vehicles which you own, it has a relatively robust set of features and allows you to customize most of your record-keeping, so it acts as a decent framework, without forcing you to keep very specific records if you do not want to. I like to keep track of my maintenance both for resale value and for my own purposes, so I find this to be useful. It currently uses LocalStorage for saving data, but I would like to change this to utilize a database in the future.
 
@@ -11,7 +11,7 @@ This website is a garage tracker which allows you to keep track of maintenance a
 
 ---
 
-## ✨ Core Features
+## Core Features
 
 * **Multi-Vehicle Management:** Add, view, and delete multiple vehicles in your garage, keep a persistent view of your vehicles' on one device through LocalStorage.
 * **Detailed Logging System:** Track both maintenance (e.g., oil changes) and modifications (e.g., aftermarket parts).
@@ -21,7 +21,7 @@ This website is a garage tracker which allows you to keep track of maintenance a
 
 ---
 
-## ♿ Accessibility & Design Decisions
+## Accessibility & Design Decisions
 
 * **Semantic HTML & Hierarchy:** Ensured strict heading levels (`<h1>` through `<h3>`) across all pages for seamless screen reader navigation.
 * **Programmatic Form Labeling:** All inputs are explicitly linked to their labels using React Bootstrap `controlId`s.
@@ -30,10 +30,7 @@ This website is a garage tracker which allows you to keep track of maintenance a
 
 ---
 
-## 💻 Built With
-
-[List the core technologies so a developer knows your stack at a glance.]
-
+## Built With
 * **React (Vite)**
 * **React Router DOM** (Client-side routing)
 * **React Bootstrap** (Component library & styling)
